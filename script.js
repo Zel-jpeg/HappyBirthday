@@ -22,7 +22,10 @@ const CONFIG = {
 // INTRO SECTION
 // ============================================
 document.getElementById('intro-title').textContent = `Happy Birthday ${CONFIG.name}!🎉`;
-document.getElementById('cake-title').textContent = `Happy Birthday ${CONFIG.name}!❤️`;
+
+// Note: You previously used 'cake-title' but that element isn't in your HTML snippet. 
+// If you added it to index.html, this line works. If not, you can remove it or ignore the error.
+// document.getElementById('cake-title').textContent = `Happy Birthday ${CONFIG.name}!❤️`;
 
 // Confetti on load
 confetti({
@@ -55,7 +58,7 @@ balloonEmojis.forEach((emoji, i) => {
     });
 });
 
-// Stars animation (UPDATED: Appended to body for global visibility)
+// Stars animation
 const starEmojis = ['⭐', '✨', '🌟', '💫','🎉', '🍰', '🎂', '🍭', '🥳', '🎁', '🎊', '🧁'];
 starEmojis.forEach((emoji, i) => {
     const star = document.createElement('div');
@@ -64,7 +67,6 @@ starEmojis.forEach((emoji, i) => {
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
     
-    // Changed from intro-section to body
     document.body.appendChild(star);
 
     gsap.to(star, {
@@ -87,10 +89,9 @@ starEmojis.forEach((emoji, i) => {
     });
 });
 
-// Transition to cake on click (UPDATED: Starts audio here)
+// Transition to cake on click (Audio starts here)
 document.getElementById('intro-section').addEventListener('click', () => {
     
-    // --- NEW: Audio Starts Here ---
     const happyBirthdayAudio = document.getElementById('happyBirthdayAudio');
     if (happyBirthdayAudio) {
         happyBirthdayAudio.currentTime = 0;
@@ -108,7 +109,6 @@ document.getElementById('intro-section').addEventListener('click', () => {
             }
         }, 100);
     }
-    // -----------------------------
 
     gsap.to('#intro-section', {
         opacity: 0,
@@ -134,7 +134,7 @@ let audioContext;
 let microphone;
 let analyser;
 let blowDetected = false;
-let micStream = null; // Stores stream for cleanup
+let micStream = null; 
 
 const happyBirthdayAudio = document.getElementById('happyBirthdayAudio');
 const cakeContainer = document.getElementById('cake-container');
@@ -145,10 +145,7 @@ const blowFallback = document.getElementById('blow-fallback');
 
 cakeContainer.addEventListener('click', () => {
     if (!candleLit) {
-        // Light the candle
         candleLit = true;
-        
-        // Note: Audio play code removed from here since it plays at Intro now
         
         // Change to lit cake image
         cakeImg.src = 'images/cake_candle_on.png';
@@ -173,7 +170,7 @@ cakeContainer.addEventListener('click', () => {
 function requestMicrophone() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            micStream = stream; // Save stream globally
+            micStream = stream;
             setupAudioDetection(stream);
         })
         .catch(err => {
@@ -223,12 +220,11 @@ function blowCandle() {
     if (blowDetected) return;
     blowDetected = true;
 
-    // Stop the instrumental audio
-    if(happyBirthdayAudio) {
-        happyBirthdayAudio.pause();
-        happyBirthdayAudio.currentTime = 0;
-    }
-
+    // --- CONTINUOUS AUDIO UPDATE ---
+    // We removed the code that stops the current song.
+    // We removed the code that starts a new Howl song.
+    // The intro song will just keep playing! 🎶
+    
     // Completely stop microphone hardware access
     if (micStream) {
         micStream.getTracks().forEach(track => track.stop());
@@ -264,13 +260,6 @@ function blowCandle() {
         colors: ['#ffd700', '#ff6b9d', '#4a90e2']
     });
 
-    // Play happy birthday song (Celebration version)
-    const birthdaySong = new Howl({
-        src: [CONFIG.audio.happyBirthday],
-        volume: 0.5
-    });
-    birthdaySong.play();
-
     // Transition to envelope
     setTimeout(() => {
         gsap.to('#cake-section', {
@@ -285,7 +274,7 @@ function blowCandle() {
                     duration: 1
                 });
 
-                gsap.to('#envelope-container', {
+                gsap.to('#envelope-container', { // Ensure ID matches your HTML (wrapper vs container)
                     scale: 1,
                     duration: 1,
                     delay: 0.5,
@@ -296,10 +285,6 @@ function blowCandle() {
     }, 2000);
 }
 
-
-// ============================================
-// ENVELOPE SECTION
-// ============================================
 // ============================================
 // ENVELOPE SECTION
 // ============================================
@@ -367,9 +352,6 @@ openSurprisesBtn.addEventListener('click', () => {
 // ============================================
 // CARDS SECTION
 // ============================================
-// ============================================
-// CARDS SECTION
-// ============================================
 
 // Card 1: Virtual Bouquet
 const cardFlower = document.getElementById('card-flower');
@@ -433,12 +415,12 @@ if (cardPhotos) {
             duration: 0.5
         });
 
-        // Animate the strip dropping down
+        // Animate the strip dropping down (Updated to handle multiple strips if present)
         gsap.from('.photobooth-strip', {
-            y: -500, // Slides down from top
-            rotate: 10, // Starts rotated
+            y: -800, 
             opacity: 0,
-            duration: 1.2,
+            duration: 1.5,
+            stagger: 0.3,
             ease: "elastic.out(1, 0.7)"
         });
     });
