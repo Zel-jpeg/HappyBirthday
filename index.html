@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎉</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
+    <!-- Howler.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    
+    <!-- Swiper.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Intro Section -->
+    <section id="intro-section">
+        <div class="text-center z-10">
+            <h1 class="chalk-text text-6xl md:text-8xl mb-6" id="intro-title">Happy Birthday!</h1>
+            <p class="chalk-text text-2xl md:text-3xl mb-4">Click the anywhere to continueeee</p>
+        </div>
+    </section>
+
+    <!-- Cake Section -->
+    <section id="cake-section">
+        <div class="cake-container" id="cake-container">
+            <div class="flame-glow" id="flame-glow"></div>
+            <img src="images/cake_idle.png" 
+                 alt="Birthday Cake" 
+                 class="cake-img"
+                 id="cake-img">
+        </div>
+        <p class="chalk-text text-2xl md:text-3xl mb-4">Click the cake to lit the candle poooo🎂</p>
+        <p class="chalk-text text-2xl mt-8 opacity-0" id="blow-instruction">Blow the candle! 💨</p>
+        <button class="blow-button hidden" id="blow-fallback">Blow Candle</button>
+    </section>
+
+    <!-- Envelope Section -->
+    <section id="envelope-section">
+        <div class="envelope-container" id="envelope-container">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect x='20' y='40' width='260' height='140' fill='%23e74c3c' rx='10'/%3E%3Cpath d='M20,40 L150,120 L280,40' fill='%23c0392b' /%3E%3Cpath d='M20,180 L150,100 L280,180' fill='none' stroke='%23c0392b' stroke-width='2'/%3E%3Cpolygon points='150,20 20,100 280,100' fill='%23e74c3c' /%3E%3Cpolygon points='150,20 20,100 280,100' fill='%23c0392b' opacity='0.3'/%3E%3C/svg%3E" 
+                 alt="Envelope" 
+                 class="envelope-img">
+        </div>
+        <p class="chalk-text text-2xl mt-8">Click to open your surprise! ✨</p>
+    </section>
+
+    <!-- Cards Section -->
+    <section id="cards-section">
+        <div class="cards-grid">
+            <!-- Card 1: Flower -->
+            <div class="card" id="card-flower">
+                <div class="card-icon">🌸</div>
+                <h3 class="card-title">A Flower For You</h3>
+                <p class="text-gray-300">Tap to bloom</p>
+                <div class="card-content">
+                    <div class="text-center">
+                        <div class="flower-bloom" id="flower">🌺</div>
+                        <p class="typewriter-text mt-4" id="flower-message"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Message -->
+            <div class="card" id="card-message">
+                <div class="card-icon">💌</div>
+                <h3 class="card-title">Special Message</h3>
+                <p class="text-gray-300">Click to read</p>
+                <div class="card-content">
+                    <p class="typewriter-text" id="special-message"></p>
+                </div>
+            </div>
+
+            <!-- Card 3: Song -->
+            <div class="card" id="card-song">
+                <div class="card-icon">🎵</div>
+                <h3 class="card-title">Our Song</h3>
+                <p class="text-gray-300">Listen now</p>
+                <div class="card-content">
+                    <div class="audio-player">
+                        <button class="play-button" id="play-button">▶</button>
+                        <div class="audio-waveform" id="waveform">
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-3 text-center">This song reminds me of you ❤️</p>
+                </div>
+            </div>
+
+            <!-- Card 4: Photos -->
+            <div class="card" id="card-photos">
+                <div class="card-icon">📸</div>
+                <h3 class="card-title">Our Memories</h3>
+                <p class="text-gray-300">Swipe through</p>
+                <div class="card-content">
+                    <div class="swiper" id="photo-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%234a90e2' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='24' fill='white' text-anchor='middle'%3EMemory 1%3C/text%3E%3C/svg%3E" alt="Photo 1">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e74c3c' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='24' fill='white' text-anchor='middle'%3EMemory 2%3C/text%3E%3C/svg%3E" alt="Photo 2">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%2350c878' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='24' fill='white' text-anchor='middle'%3EMemory 3%3C/text%3E%3C/svg%3E" alt="Photo 3">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <audio id="happyBirthdayAudio" src="audio/happy_birthday.mp3" preload="auto"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
