@@ -430,7 +430,7 @@ body {
 /* The Ribbon */
 .bouquet-ribbon {
     position: absolute;
-    bottom: 20px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 4rem;
@@ -553,7 +553,7 @@ body {
     display: flex !important;
     justify-content: center;
     align-items: center;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 /* Ensure the generated strip looks consistent */

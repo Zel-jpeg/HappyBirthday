@@ -427,7 +427,7 @@ if (cardPhotos) {
             y: -500, // Slides down from top
             rotate: 10, // Starts rotated
             opacity: 0,
-            duration: 1.2,
+            duration: 1.5,
             ease: "elastic.out(1, 0.7)"
         });
     });
