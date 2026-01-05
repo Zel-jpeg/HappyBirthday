@@ -305,7 +305,7 @@ body {
     background: #fdfefe;
     width: 90%;
     max-width: 500px;
-    padding: 50px 40px;
+    padding: 40px 40px;
     border-radius: 5px;
     box-shadow: 0 0 50px rgba(255,255,255,0.1);
     transform: scale(0.8); /* Starts slightly small for animation */
