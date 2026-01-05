@@ -22,10 +22,7 @@ const CONFIG = {
 // INTRO SECTION
 // ============================================
 document.getElementById('intro-title').textContent = `Happy Birthday ${CONFIG.name}!🎉`;
-
-// Note: You previously used 'cake-title' but that element isn't in your HTML snippet. 
-// If you added it to index.html, this line works. If not, you can remove it or ignore the error.
-// document.getElementById('cake-title').textContent = `Happy Birthday ${CONFIG.name}!❤️`;
+document.getElementById('cake-title').textContent = `Happy Birthday ${CONFIG.name}!❤️`;
 
 // Confetti on load
 confetti({
@@ -58,7 +55,7 @@ balloonEmojis.forEach((emoji, i) => {
     });
 });
 
-// Stars animation
+// Stars animation (UPDATED: Appended to body for global visibility)
 const starEmojis = ['⭐', '✨', '🌟', '💫','🎉', '🍰', '🎂', '🍭', '🥳', '🎁', '🎊', '🧁'];
 starEmojis.forEach((emoji, i) => {
     const star = document.createElement('div');
@@ -67,6 +64,7 @@ starEmojis.forEach((emoji, i) => {
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
     
+    // Changed from intro-section to body
     document.body.appendChild(star);
 
     gsap.to(star, {
@@ -89,9 +87,10 @@ starEmojis.forEach((emoji, i) => {
     });
 });
 
-// Transition to cake on click (Audio starts here)
+// Transition to cake on click (UPDATED: Starts audio here)
 document.getElementById('intro-section').addEventListener('click', () => {
     
+    // --- NEW: Audio Starts Here ---
     const happyBirthdayAudio = document.getElementById('happyBirthdayAudio');
     if (happyBirthdayAudio) {
         happyBirthdayAudio.currentTime = 0;
@@ -109,6 +108,7 @@ document.getElementById('intro-section').addEventListener('click', () => {
             }
         }, 100);
     }
+    // -----------------------------
 
     gsap.to('#intro-section', {
         opacity: 0,
@@ -134,7 +134,7 @@ let audioContext;
 let microphone;
 let analyser;
 let blowDetected = false;
-let micStream = null; 
+let micStream = null; // Stores stream for cleanup
 
 const happyBirthdayAudio = document.getElementById('happyBirthdayAudio');
 const cakeContainer = document.getElementById('cake-container');
@@ -145,7 +145,10 @@ const blowFallback = document.getElementById('blow-fallback');
 
 cakeContainer.addEventListener('click', () => {
     if (!candleLit) {
+        // Light the candle
         candleLit = true;
+        
+        // Note: Audio play code removed from here since it plays at Intro now
         
         // Change to lit cake image
         cakeImg.src = 'images/cake_candle_on.png';
@@ -170,7 +173,7 @@ cakeContainer.addEventListener('click', () => {
 function requestMicrophone() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            micStream = stream;
+            micStream = stream; // Save stream globally
             setupAudioDetection(stream);
         })
         .catch(err => {
@@ -285,6 +288,10 @@ function blowCandle() {
     }, 2000);
 }
 
+
+// ============================================
+// ENVELOPE SECTION
+// ============================================
 // ============================================
 // ENVELOPE SECTION
 // ============================================
@@ -415,12 +422,12 @@ if (cardPhotos) {
             duration: 0.5
         });
 
-        // Animate the strip dropping down (Updated to handle multiple strips if present)
+        // Animate the strip dropping down
         gsap.from('.photobooth-strip', {
-            y: -800, 
+            y: -500, // Slides down from top
+            rotate: 10, // Starts rotated
             opacity: 0,
-            duration: 1.5,
-            stagger: 0.3,
+            duration: 1.2,
             ease: "elastic.out(1, 0.7)"
         });
     });
@@ -466,4 +473,142 @@ if (restartBtn) {
         // Reloads the page to reset all animations and audio
         location.reload(); 
     });
+}
+
+// ============================================
+// PHOTOBOOTH LOGIC (Updated)
+// ============================================
+
+// Camera Elements
+const addPhotoBtn = document.getElementById('add-photo-btn');
+const photoInput = document.getElementById('user-photo-input');
+const photoCountText = document.getElementById('photo-count-text');
+const photoboothWrapper = document.getElementById('photobooth-wrapper');
+
+// Variables
+let userImages = []; // Stores the selected photos
+let boothSwiper = null; // Stores the swiper instance
+
+// 1. Open the Section
+if (cardPhotos) {
+    cardPhotos.addEventListener('click', () => {
+        memorySection.style.display = 'flex';
+        memorySection.style.opacity = 0;
+
+        gsap.to(memorySection, { opacity: 1, duration: 0.5 });
+
+        // Initialize Swiper only if not already done
+        if (!boothSwiper) {
+            boothSwiper = new Swiper('.photobooth-swiper', {
+                effect: 'cards', // Cool stack effect (or use 'slide')
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+            });
+        }
+    });
+}
+
+// 2. Close the Section
+if (closeMemoryBtn) {
+    closeMemoryBtn.addEventListener('click', () => {
+        gsap.to(memorySection, {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: () => { memorySection.style.display = 'none'; }
+        });
+    });
+}
+
+// 3. "Add Photo" Button Click -> Trigger Input
+if (addPhotoBtn) {
+    addPhotoBtn.addEventListener('click', () => {
+        photoInput.click();
+    });
+}
+
+// 4. Handle File Selection
+if (photoInput) {
+    photoInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        
+        if (files.length === 0) return;
+
+        // Process each file
+        files.forEach(file => {
+            if (userImages.length < 3) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    userImages.push(event.target.result); // Save Base64 image
+                    updateUI(); // Update text
+                    
+                    // If we have 3, Generate Strip!
+                    if (userImages.length === 3) {
+                        createNewStrip();
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Reset input so they can select the same file again if needed
+        photoInput.value = ''; 
+    });
+}
+
+// Helper: Update Button Text
+function updateUI() {
+    const count = userImages.length;
+    addPhotoBtn.textContent = `📷 Add Photo (${count}/3)`;
+    
+    if (count === 3) {
+        addPhotoBtn.textContent = "✨ Creating Strip...";
+        addPhotoBtn.disabled = true;
+    }
+}
+
+// Helper: Generate the New HTML Strip
+function createNewStrip() {
+    // 1. Create the HTML string for the new slide
+    const date = new Date().toLocaleDateString();
+    
+    const newSlideHTML = `
+        <div class="swiper-slide display-flex-center">
+            <div class="photobooth-strip user-created" style="transform: rotate(-2deg);">
+                <div class="photo-frame"><img src="${userImages[0]}" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="photo-frame"><img src="${userImages[1]}" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="photo-frame"><img src="${userImages[2]}" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="strip-footer">
+                    <span>You & Me ❤️</span>
+                    <span class="date">${date}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // 2. Add to Swiper
+    boothSwiper.appendSlide(newSlideHTML);
+    boothSwiper.update(); // Refresh swiper
+
+    // 3. Slide to the new strip with a delay
+    setTimeout(() => {
+        boothSwiper.slideTo(boothSwiper.slides.length - 1);
+        
+        // Confetti for success!
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            zIndex: 300
+        });
+
+        // Reset for next time
+        userImages = [];
+        addPhotoBtn.textContent = "📷 Add Photo (0/3)";
+        addPhotoBtn.disabled = false;
+        alert("New memory added! Swipe to see it.");
+    }, 500);
 }

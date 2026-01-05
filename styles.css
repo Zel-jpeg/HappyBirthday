@@ -540,7 +540,32 @@ body {
     color: #666;
 }
 
+/* Swiper Adjustments for Photobooth */
+.photobooth-swiper {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding-bottom: 30px; /* Space for pagination dots */
+}
 
+/* Helper to center the strip inside the slide */
+.display-flex-center {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+/* Ensure the generated strip looks consistent */
+.photobooth-strip {
+    flex-shrink: 0; /* Prevents squishing */
+    /* Keep your existing .photobooth-strip styles here! */
+}
+
+/* Camera Controls */
+.camera-controls {
+    z-index: 10;
+}
 
 /* Cards Section */
 #cards-section {

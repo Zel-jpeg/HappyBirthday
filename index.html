@@ -98,23 +98,36 @@
         <div class="memory-content">
             <h2 class="chalk-text text-3xl mb-4">captured moments 📸</h2>
             
-            <div class="photobooth-strip">
-                <div class="photo-frame">
-                    <img src="images/photo1.jpg" alt="Memory 1">
+            <div class="swiper-container photobooth-swiper" style="width: 100%; padding: 20px 0;">
+                <div class="swiper-wrapper" id="photobooth-wrapper">
+                    
+                    <div class="swiper-slide display-flex-center">
+                        <div class="photobooth-strip">
+                            <div class="photo-frame"><img src="images/pic1.jpg" alt="1"></div>
+                            <div class="photo-frame"><img src="images/pic2.jpg" alt="2"></div>
+                            <div class="photo-frame"><img src="images/pic3.jpg" alt="3"></div>
+                            <div class="strip-footer">
+                                <span>Happy Birthday!</span>
+                                <span class="date">01.20.2026</span>
+                            </div>
+                        </div>
+                    </div>
+    
                 </div>
-                <div class="photo-frame">
-                    <img src="images/photo2.jpg" alt="Memory 2">
-                </div>
-                <div class="photo-frame">
-                    <img src="images/photo3.jpg" alt="Memory 3">
-                </div>
-                <div class="strip-footer">
-                    <span>Happy Birthday!</span>
-                    <span class="date">01.20.2026</span>
-                </div>
+                <div class="swiper-pagination"></div>
             </div>
     
-            <button id="close-memory-btn" class="continue-btn mt-6">Close</button>
+            <div class="camera-controls mt-4 text-center">
+                <p class="text-gray-300 text-sm mb-2" id="photo-count-text">Add 3 photos to create a new strip!</p>
+                
+                <button id="add-photo-btn" class="continue-btn" style="background: #2ecc71;">
+                    📷 Add Photo (0/3)
+                </button>
+                
+                <input type="file" id="user-photo-input" accept="image/*" multiple style="display: none;">
+            </div>
+    
+            <button id="close-memory-btn" class="continue-btn mt-4" style="background: #555;">Close</button>
         </div>
     </section>
 
