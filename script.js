@@ -54,7 +54,7 @@ balloonEmojis.forEach((emoji, i) => {
     });
 });
 
-// Stars animation
+// Stars animation (UPDATED: Appended to body for global visibility)
 const starEmojis = ['⭐', '✨', '🌟', '💫', '⭐', '✨', '🌟', '💫', '⭐', '✨'];
 starEmojis.forEach((emoji, i) => {
     const star = document.createElement('div');
@@ -62,7 +62,9 @@ starEmojis.forEach((emoji, i) => {
     star.textContent = emoji;
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
-    document.getElementById('intro-section').appendChild(star);
+    
+    // Changed from intro-section to body
+    document.body.appendChild(star);
 
     gsap.to(star, {
         y: Math.random() * 100 - 50,
@@ -84,8 +86,29 @@ starEmojis.forEach((emoji, i) => {
     });
 });
 
-// Transition to cake on click
+// Transition to cake on click (UPDATED: Starts audio here)
 document.getElementById('intro-section').addEventListener('click', () => {
+    
+    // --- NEW: Audio Starts Here ---
+    const happyBirthdayAudio = document.getElementById('happyBirthdayAudio');
+    if (happyBirthdayAudio) {
+        happyBirthdayAudio.currentTime = 0;
+        happyBirthdayAudio.volume = 0;
+        happyBirthdayAudio.play();
+
+        // Fade in logic
+        let vol = 0;
+        const fadeInterval = setInterval(() => {
+            if (vol < 1.0) {
+                vol += 0.05;
+                happyBirthdayAudio.volume = Math.min(vol, 1.0);
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+    // -----------------------------
+
     gsap.to('#intro-section', {
         opacity: 0,
         duration: 1,
@@ -110,11 +133,9 @@ let audioContext;
 let microphone;
 let analyser;
 let blowDetected = false;
-let micStream = null; // NEW: To store the stream for cleanup
+let micStream = null; // Stores stream for cleanup
 
-// NEW: Select the audio element
 const happyBirthdayAudio = document.getElementById('happyBirthdayAudio');
-
 const cakeContainer = document.getElementById('cake-container');
 const cakeImg = document.getElementById('cake-img');
 const flameGlow = document.getElementById('flame-glow');
@@ -126,21 +147,7 @@ cakeContainer.addEventListener('click', () => {
         // Light the candle
         candleLit = true;
         
-        // NEW: Play Audio with Fade-in
-        happyBirthdayAudio.currentTime = 0;
-        happyBirthdayAudio.volume = 0;
-        happyBirthdayAudio.play();
-
-        // Fade in logic
-        let vol = 0;
-        const fadeInterval = setInterval(() => {
-            if (vol < 1.0) {
-                vol += 0.05;
-                happyBirthdayAudio.volume = Math.min(vol, 1.0);
-            } else {
-                clearInterval(fadeInterval);
-            }
-        }, 100);
+        // Note: Audio play code removed from here since it plays at Intro now
         
         // Change to lit cake image
         cakeImg.src = 'images/cake_candle_on.png';
@@ -165,7 +172,7 @@ cakeContainer.addEventListener('click', () => {
 function requestMicrophone() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            micStream = stream; // NEW: Save stream to global variable
+            micStream = stream; // Save stream globally
             setupAudioDetection(stream);
         })
         .catch(err => {
@@ -215,18 +222,18 @@ function blowCandle() {
     if (blowDetected) return;
     blowDetected = true;
 
-    // NEW: Stop the instrumental audio immediately
+    // Stop the instrumental audio
     if(happyBirthdayAudio) {
         happyBirthdayAudio.pause();
         happyBirthdayAudio.currentTime = 0;
     }
 
-    // NEW: Completely stop microphone hardware access
+    // Completely stop microphone hardware access
     if (micStream) {
         micStream.getTracks().forEach(track => track.stop());
     }
 
-    // Stop microphone processing
+    // Stop microphone processing context
     if (microphone) {
         microphone.disconnect();
         audioContext.close();
