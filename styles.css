@@ -734,7 +734,7 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
     .cake-img {
-        width: 200px;
+        width: 350px;
     }
     
     .cards-grid {
