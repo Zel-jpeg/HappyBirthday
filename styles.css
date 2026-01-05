@@ -27,7 +27,6 @@ body {
 
 .star {
     position: absolute;
-    z-index: -1;     /* Keeps them behind the text/cake */
     color: #fff;
     font-size: 1rem;
     opacity: 0;
@@ -152,22 +151,396 @@ body {
     opacity: 0;
 }
 
-.envelope-container {
+/* Envelope Wrapper - The Click Target */
+.envelope-wrapper {
     position: relative;
+    width: 320px;
+    height: 220px;
+    background: transparent;
     cursor: pointer;
-    transform: scale(0);
-}
-
-.envelope-img {
-    width: 250px;
-    height: auto;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+    margin: 0 auto;
     transition: transform 0.3s ease;
 }
 
-.envelope-img:hover {
-    transform: scale(1.05);
+.envelope-wrapper:hover {
+    transform: scale(1.02);
 }
+
+/* 1. Back of the envelope (Darker inside) */
+.envelope-back {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: #a93226; /* Deep Red */
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* 2. The Letter (Paper) */
+.letter {
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    background: #fdfefe; /* Off-white paper */
+    border-radius: 5px;
+    z-index: 1;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+}
+
+.letter-text {
+    font-family: 'Dancing Script', cursive;
+    color: #c0392b;
+    font-size: 1.5rem;
+}
+
+/* 3. The Pocket (Front Triangle) */
+.envelope-pocket {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    clip-path: polygon(0 100%, 100% 100%, 100% 0, 50% 50%, 0 0);
+    border-radius: 0 0 10px 10px;
+    z-index: 2;
+    /* This creates the shadow on the triangle shape */
+    filter: drop-shadow(0 -2px 5px rgba(0,0,0,0.2)); 
+}
+
+/* 4. The Lid (Flap) */
+/* 2. The Letter (Paper) */
+.letter {
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    background: #fdfefe;
+    border-radius: 5px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    
+    /* UPDATED TRANSITION */
+    /* Duration: 1s, Delay: 0.8s (waits for lid to open) */
+    transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.8s;
+}
+
+/* 4. The Lid (Flap) */
+.envelope-lid {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 110px;
+    background: #e74c3c;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    z-index: 3;
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); 
+    
+    /* UPDATED TRANSITION */
+    /* Duration: 0.8s (slower smooth open) */
+    transition: transform 0.8s ease-in-out, z-index 0.1s ease-in-out 0.4s;
+}
+
+/* 5. The Wax Seal */
+.wax-seal {
+    position: absolute;
+    bottom: 20px; /* Position at the tip of the triangle */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45px;
+    height: 45px;
+    background: #922b21; /* Dark wax color */
+    border-radius: 50%;
+    border: 3px solid #cb4335;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.8);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    z-index: 4;
+}
+
+/* --- ANIMATION STATES --- */
+.envelope-wrapper.open .envelope-lid {
+    transform: rotateX(180deg);
+    z-index: 0; /* Moves behind the letter */
+}
+
+.envelope-wrapper.open .letter {
+    transform: translateY(-60px); /* Letter pops up */
+    z-index: 2; /* Letter moves on top of pocket */
+}
+
+
+
+/* Letter View Section */
+#letter-view-section {
+    min-height: 100vh;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.8); /* Dark overlay */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+/* The Actual Paper Design */
+.paper-content {
+    background: #fdfefe;
+    width: 90%;
+    max-width: 500px;
+    padding: 50px 40px;
+    border-radius: 5px;
+    box-shadow: 0 0 50px rgba(255,255,255,0.1);
+    transform: scale(0.8); /* Starts slightly small for animation */
+    opacity: 0;
+    text-align: center;
+    position: relative;
+    border: 2px solid #f2d7d5; /* Soft pinkish border */
+}
+
+/* Add a "Paper" Texture feel */
+.paper-content::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px dashed #e6b0aa;
+    pointer-events: none;
+}
+
+.handwritten-title {
+    font-family: 'Pacifico', cursive;
+    color: #c0392b;
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+}
+
+.handwritten-body {
+    font-family: 'Dancing Script', cursive;
+    color: #4a235a;
+    font-size: 1.6rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.4rem;
+    color: #888;
+    margin-bottom: 40px;
+}
+
+/* The 'See More' Button */
+.continue-btn {
+    padding: 12px 35px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(192, 57, 43, 0.3);
+}
+
+.continue-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(192, 57, 43, 0.5);
+}
+
+
+/* Flower Overlay */
+#flower-view-section {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    background: rgba(0, 0, 0, 0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    overflow: hidden; /* Prevents scrolling if flowers are huge */
+}
+
+.flower-content {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Responsive Text Sizes */
+.responsive-title {
+    font-size: clamp(2rem, 5vw, 3.5rem); /* Scales between 2rem and 3.5rem */
+    color: #f0f0f0;
+}
+
+.responsive-text {
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    max-width: 80%;
+}
+
+/* Bouquet Wrapper - Holds everything together */
+.bouquet-wrapper {
+    position: relative;
+    width: 300px;
+    height: 350px;
+    margin: 20px auto;
+    /* Debug border: border: 1px solid red; */
+}
+
+/* Common Tulip Styles */
+.tulip-item {
+    position: absolute;
+    bottom: 50px; /* Leave space for ribbon */
+    left: 50%;
+    transform-origin: bottom center;
+    font-size: clamp(10rem, 20vw, 8rem); /* Big flowers! */
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+    transition: transform 0.5s ease;
+}
+
+/* Positioning the flowers to create a fan/bouquet shape */
+.t-1 { transform: translateX(-50%) rotate(-25deg) translateY(10px); z-index: 1; }
+.t-2 { transform: translateX(-50%) rotate(25deg) translateY(10px); z-index: 1; }
+.t-3 { transform: translateX(-50%) rotate(-10deg); z-index: 2; }
+.t-4 { transform: translateX(-50%) rotate(10deg); z-index: 2; }
+.t-5 { transform: translateX(-50%) translateY(-10px); z-index: 3; } /* Center is highest */
+
+/* The Ribbon */
+.bouquet-ribbon {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    z-index: 4;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+}
+
+/* SWAY Animation (Optional: makes them look alive) */
+.tulip-item {
+    animation: gentleSway 3s ease-in-out infinite alternate;
+}
+
+@keyframes gentleSway {
+    0% { transform: translateX(-50%) rotate(var(--r)) rotate(-2deg); }
+    100% { transform: translateX(-50%) rotate(var(--r)) rotate(2deg); }
+}
+
+/* We need to set the base rotation variable for the animation to work */
+.t-1 { --r: -25deg; }
+.t-2 { --r: 25deg; }
+.t-3 { --r: -10deg; }
+.t-4 { --r: 10deg; }
+.t-5 { --r: 0deg; }
+
+/* --- MOBILE SPECIFIC TWEAKS --- */
+@media (max-height: 700px) {
+    /* If the screen is short (landscape phone), shrink the bouquet */
+    .bouquet-wrapper {
+        transform: scale(0.7);
+        height: 250px;
+        margin: 0 auto;
+    }
+}
+
+
+/* Memory Overlay */
+#memory-view-section {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    overflow-y: auto; /* Allows scrolling if the strip is long */
+    padding: 20px 0;
+}
+
+.memory-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    
+}
+
+/* The Photo Strip Object */
+.photobooth-strip {
+    background: #fff;
+    padding: 15px 15px 30px 15px; /* Extra padding at bottom for text */
+    width: 280px; /* Standard strip width */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    transform: rotate(-2deg); /* Slight tilt for realism */
+    transition: transform 0.3s ease;
+}
+
+.photobooth-strip:hover {
+    transform: rotate(0deg) scale(1.02);
+}
+
+/* Individual Photos */
+.photo-frame {
+    width: 100%;
+    height: 180px; /* Fixed height for uniformity */
+    background: #eee;
+    overflow: hidden;
+    filter: grayscale(20%); /* Optional: Slight vintage fade */
+    border: 1px solid #ddd;
+}
+
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* The Text at the bottom of the strip */
+.strip-footer {
+    text-align: center;
+    font-family: 'Courier New', monospace; /* Typewriter look */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.strip-footer .date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+
 
 /* Cards Section */
 #cards-section {
@@ -181,13 +554,16 @@ body {
 }
 
 .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
+    display: flex; /* Changed from Grid to Flex for better centering of just 2 items */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1000px;
     width: 100%;
+    margin: 0 auto;
 }
 
+/* Ensure cards stay a good size */
 .card {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
@@ -195,9 +571,11 @@ body {
     border-radius: 20px;
     padding: 30px;
     cursor: pointer;
-    transform: scale(0);
+    width: 300px; /* Fixed width for consistency */
+    flex-shrink: 0;
     transition: all 0.3s ease;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
 }
 
 .card:hover {

@@ -21,7 +21,8 @@ const CONFIG = {
 // ============================================
 // INTRO SECTION
 // ============================================
-document.getElementById('intro-title').textContent = `Happy Birthday ${CONFIG.name}! 🎉`;
+document.getElementById('intro-title').textContent = `Happy Birthday ${CONFIG.name}!🎉`;
+document.getElementById('cake-title').textContent = `Happy Birthday ${CONFIG.name}!❤️`;
 
 // Confetti on load
 confetti({
@@ -55,7 +56,7 @@ balloonEmojis.forEach((emoji, i) => {
 });
 
 // Stars animation (UPDATED: Appended to body for global visibility)
-const starEmojis = ['⭐', '✨', '🌟', '💫', '⭐', '✨', '🌟', '💫', '⭐', '✨'];
+const starEmojis = ['⭐', '✨', '🌟', '💫','🎉', '🍰', '🎂', '🍭', '🥳', '🎁', '🎊', '🧁'];
 starEmojis.forEach((emoji, i) => {
     const star = document.createElement('div');
     star.className = 'star';
@@ -295,155 +296,165 @@ function blowCandle() {
     }, 2000);
 }
 
+
 // ============================================
 // ENVELOPE SECTION
 // ============================================
-const envelopeContainer = document.getElementById('envelope-container');
+// ============================================
+// ENVELOPE SECTION
+// ============================================
+const envelopeWrapper = document.getElementById('envelope-wrapper');
+const openSurprisesBtn = document.getElementById('open-surprises-btn');
 
-envelopeContainer.addEventListener('click', () => {
-    gsap.to('#envelope-container', {
-        rotateX: 180,
-        scale: 0,
-        duration: 0.8,
-        ease: "power2.in"
-    });
+envelopeWrapper.addEventListener('click', () => {
+    // 1. Trigger Envelope Open Animation
+    envelopeWrapper.classList.add('open');
 
+    // 2. Wait for envelope to open (2.5s), then go to Letter View
     setTimeout(() => {
         gsap.to('#envelope-section', {
             opacity: 0,
             duration: 0.8,
             onComplete: () => {
                 document.getElementById('envelope-section').style.display = 'none';
-                document.getElementById('cards-section').style.display = 'flex';
                 
-                gsap.to('#cards-section', {
-                    opacity: 1,
-                    duration: 1
-                });
-
-                // Animate cards in
-                const cards = document.querySelectorAll('.card');
-                cards.forEach((card, i) => {
-                    gsap.to(card, {
-                        scale: 1,
-                        duration: 0.6,
-                        delay: i * 0.2,
-                        ease: "back.out(1.7)"
-                    });
+                // Show Letter Section
+                const letterSection = document.getElementById('letter-view-section');
+                letterSection.style.display = 'flex';
+                
+                // Animate Paper Popping In
+                gsap.to(letterSection, { opacity: 1, duration: 0.5 });
+                gsap.to('#paper-content', { 
+                    scale: 1, 
+                    opacity: 1, 
+                    duration: 0.8, 
+                    ease: "back.out(1.5)" 
                 });
             }
         });
-    }, 500);
+    }, 2500);
+});
+
+// 3. Handle 'See More' Button Click
+openSurprisesBtn.addEventListener('click', () => {
+    gsap.to('#letter-view-section', {
+        opacity: 0,
+        duration: 0.8,
+        onComplete: () => {
+            document.getElementById('letter-view-section').style.display = 'none';
+            document.getElementById('cards-section').style.display = 'flex';
+            
+            // Fade in Cards Section
+            gsap.to('#cards-section', {
+                opacity: 1,
+                duration: 1
+            });
+
+            // Pop up cards one by one
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, i) => {
+                gsap.to(card, {
+                    scale: 1,
+                    duration: 0.6,
+                    delay: i * 0.2,
+                    ease: "back.out(1.7)"
+                });
+            });
+        }
+    });
 });
 
 // ============================================
 // CARDS SECTION
 // ============================================
+// ============================================
+// CARDS SECTION
+// ============================================
 
-// Card 1: Flower
+// Card 1: Virtual Bouquet
 const cardFlower = document.getElementById('card-flower');
-const flower = document.getElementById('flower');
-const flowerMessage = document.getElementById('flower-message');
+const flowerSection = document.getElementById('flower-view-section');
+const closeFlowerBtn = document.getElementById('close-flower-btn');
 
-cardFlower.addEventListener('click', () => {
-    if (!cardFlower.classList.contains('active')) {
-        cardFlower.classList.add('active');
+if (cardFlower) {
+    cardFlower.addEventListener('click', () => {
+        flowerSection.style.display = 'flex';
+        flowerSection.style.opacity = 0;
+
+        gsap.to(flowerSection, {
+            opacity: 1,
+            duration: 0.5
+        });
+
+        // Pop the bouquet items up
+        gsap.from('.tulip-item', {
+            scale: 0,
+            y: 100,
+            rotation: 0,
+            duration: 1.2,
+            stagger: 0.1,
+            ease: "elastic.out(1, 0.6)"
+        });
         
-        gsap.to(flower, {
-            scale: 1,
-            rotation: 360,
-            duration: 1.5,
-            ease: "elastic.out(1, 0.5)"
+        gsap.from('.bouquet-ribbon', {
+            scale: 0,
+            duration: 0.8,
+            delay: 0.8,
+            ease: "back.out(2)"
         });
+    });
+}
 
-        typeWriter(flowerMessage, CONFIG.messages.flower);
-    }
-});
-
-// Card 2: Message
-const cardMessage = document.getElementById('card-message');
-const specialMessage = document.getElementById('special-message');
-
-cardMessage.addEventListener('click', () => {
-    if (!cardMessage.classList.contains('active')) {
-        cardMessage.classList.add('active');
-        typeWriter(specialMessage, CONFIG.messages.special);
-    }
-});
-
-// Card 3: Song
-const cardSong = document.getElementById('card-song');
-const playButton = document.getElementById('play-button');
-const waveform = document.getElementById('waveform');
-
-let songPlaying = false;
-const song = new Howl({
-    src: [CONFIG.audio.remindsOfYou],
-    volume: 0.6,
-    onend: () => {
-        songPlaying = false;
-        playButton.textContent = '▶';
-        waveform.querySelectorAll('.wave-bar').forEach(bar => {
-            bar.classList.remove('active');
+if (closeFlowerBtn) {
+    closeFlowerBtn.addEventListener('click', () => {
+        gsap.to(flowerSection, {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: () => {
+                flowerSection.style.display = 'none';
+            }
         });
-    }
-});
+    });
+}
 
-cardSong.addEventListener('click', (e) => {
-    if (!cardSong.classList.contains('active')) {
-        cardSong.classList.add('active');
-    }
-});
-
-playButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    
-    if (songPlaying) {
-        song.pause();
-        playButton.textContent = '▶';
-        waveform.querySelectorAll('.wave-bar').forEach(bar => {
-            bar.classList.remove('active');
-        });
-    } else {
-        song.play();
-        playButton.textContent = '⏸';
-        waveform.querySelectorAll('.wave-bar').forEach((bar, i) => {
-            setTimeout(() => {
-                bar.classList.add('active');
-                bar.style.animationDelay = `${i * 0.1}s`;
-            }, i * 50);
-        });
-    }
-    
-    songPlaying = !songPlaying;
-});
-
-// Card 4: Photos
+// Card 2: Photobooth Strip
 const cardPhotos = document.getElementById('card-photos');
-let swiperInitialized = false;
+const memorySection = document.getElementById('memory-view-section');
+const closeMemoryBtn = document.getElementById('close-memory-btn');
 
-cardPhotos.addEventListener('click', () => {
-    if (!cardPhotos.classList.contains('active')) {
-        cardPhotos.classList.add('active');
-        
-        if (!swiperInitialized) {
-            new Swiper('#photo-swiper', {
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev'
-                },
-                loop: true,
-                effect: 'fade',
-                speed: 600
-            });
-            swiperInitialized = true;
-        }
-    }
-});
+if (cardPhotos) {
+    cardPhotos.addEventListener('click', () => {
+        memorySection.style.display = 'flex';
+        memorySection.style.opacity = 0;
+
+        // Fade in background
+        gsap.to(memorySection, {
+            opacity: 1,
+            duration: 0.5
+        });
+
+        // Animate the strip dropping down
+        gsap.from('.photobooth-strip', {
+            y: -500, // Slides down from top
+            rotate: 10, // Starts rotated
+            opacity: 0,
+            duration: 1.2,
+            ease: "elastic.out(1, 0.7)"
+        });
+    });
+}
+
+if (closeMemoryBtn) {
+    closeMemoryBtn.addEventListener('click', () => {
+        gsap.to(memorySection, {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: () => {
+                memorySection.style.display = 'none';
+            }
+        });
+    });
+}
 
 // ============================================
 // UTILITY FUNCTIONS
@@ -461,4 +472,16 @@ function typeWriter(element, text, speed = 50) {
     }
     
     type();
+}
+
+// ============================================
+// RESTART FUNCTION
+// ============================================
+const restartBtn = document.getElementById('restart-btn');
+
+if (restartBtn) {
+    restartBtn.addEventListener('click', () => {
+        // Reloads the page to reset all animations and audio
+        location.reload(); 
+    });
 }

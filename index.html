@@ -37,6 +37,8 @@
 
     <!-- Cake Section -->
     <section id="cake-section">
+        <h1 class="chalk-text text-4xl md:text-5xl mb-8" id="cake-title">Happy Birthday!</h1>
+
         <div class="cake-container" id="cake-container">
             <div class="flame-glow" id="flame-glow"></div>
             <img src="images/cake_idle.png" 
@@ -49,90 +51,93 @@
         <button class="blow-button hidden" id="blow-fallback">Blow Candle</button>
     </section>
 
-    <!-- Envelope Section -->
     <section id="envelope-section">
-        <div class="envelope-container" id="envelope-container">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect x='20' y='40' width='260' height='140' fill='%23e74c3c' rx='10'/%3E%3Cpath d='M20,40 L150,120 L280,40' fill='%23c0392b' /%3E%3Cpath d='M20,180 L150,100 L280,180' fill='none' stroke='%23c0392b' stroke-width='2'/%3E%3Cpolygon points='150,20 20,100 280,100' fill='%23e74c3c' /%3E%3Cpolygon points='150,20 20,100 280,100' fill='%23c0392b' opacity='0.3'/%3E%3C/svg%3E" 
-                 alt="Envelope" 
-                 class="envelope-img">
+        <div class="envelope-wrapper" id="envelope-wrapper">
+            <div class="envelope-back"></div>
+            <div class="letter">
+                <div class="letter-text">For You...</div>
+            </div>
+            <div class="envelope-pocket"></div>
+            <div class="envelope-lid">
+                <div class="wax-seal">❤️</div>
+            </div>
         </div>
-        <p class="chalk-text text-2xl mt-8">Click to open your surprise! ✨</p>
+        <p class="chalk-text text-2xl mt-12">Click to open your surprise! ✨</p>
     </section>
 
-    <!-- Cards Section -->
-    <section id="cards-section">
+    <section id="letter-view-section">
+        <div class="paper-content" id="paper-content">
+            <h2 class="handwritten-title">Dearest Boss,</h2>
+            <p class="handwritten-body">
+                Happy Birthday! 🎉<br><br>
+                May this special day bring you endless joy, laughter, and everything your heart desires. You are truly appreciated!
+            </p>
+            <div class="signature">With love... ❤️</div>
+            
+            <button id="open-surprises-btn" class="continue-btn">See More Surprises ✨</button>
+        </div>
+    </section>
+
+    <section id="flower-view-section">
+        <div class="flower-content">
+            <h2 class="chalk-text responsive-title mb-8">Virtual Flowes For You 💐</h2>
+            
+            <div class="bouquet-wrapper">
+                <div class="tulip-item t-1">🌷</div> <div class="tulip-item t-2">🌷</div> <div class="tulip-item t-3">🌷</div> <div class="tulip-item t-4">🌷</div> <div class="tulip-item t-5">🌷</div> <div class="bouquet-ribbon">🎀</div>
+            </div>
+    
+            <p class="handwritten-body responsive-text" style="color: white; margin-top: 20px;">
+                "Just like these flowers, you bring color and beauty to my life."
+            </p>
+    
+            <button id="close-flower-btn" class="continue-btn">Close</button>
+        </div>
+    </section>
+
+    <section id="memory-view-section">
+        <div class="memory-content">
+            <h2 class="chalk-text text-3xl mb-4">captured moments 📸</h2>
+            
+            <div class="photobooth-strip">
+                <div class="photo-frame">
+                    <img src="images/photo1.jpg" alt="Memory 1">
+                </div>
+                <div class="photo-frame">
+                    <img src="images/photo2.jpg" alt="Memory 2">
+                </div>
+                <div class="photo-frame">
+                    <img src="images/photo3.jpg" alt="Memory 3">
+                </div>
+                <div class="strip-footer">
+                    <span>Happy Birthday!</span>
+                    <span class="date">01.20.2026</span>
+                </div>
+            </div>
+    
+            <button id="close-memory-btn" class="continue-btn mt-6">Close</button>
+        </div>
+    </section>
+
+    <section id="cards-section" class="flex flex-col items-center">
         <div class="cards-grid">
-            <!-- Card 1: Flower -->
+            
             <div class="card" id="card-flower">
-                <div class="card-icon">🌸</div>
-                <h3 class="card-title">A Flower For You</h3>
-                <p class="text-gray-300">Tap to bloom</p>
-                <div class="card-content">
-                    <div class="text-center">
-                        <div class="flower-bloom" id="flower">🌺</div>
-                        <p class="typewriter-text mt-4" id="flower-message"></p>
-                    </div>
-                </div>
+                <div class="card-icon">💐</div>
+                <h3 class="card-title">Virtual Flowers</h3>
+                <p class="text-gray-300">Tap to receive</p>
             </div>
 
-            <!-- Card 2: Message -->
-            <div class="card" id="card-message">
-                <div class="card-icon">💌</div>
-                <h3 class="card-title">Special Message</h3>
-                <p class="text-gray-300">Click to read</p>
-                <div class="card-content">
-                    <p class="typewriter-text" id="special-message"></p>
-                </div>
-            </div>
-
-            <!-- Card 3: Song -->
-            <div class="card" id="card-song">
-                <div class="card-icon">🎵</div>
-                <h3 class="card-title">Our Song</h3>
-                <p class="text-gray-300">Listen now</p>
-                <div class="card-content">
-                    <div class="audio-player">
-                        <button class="play-button" id="play-button">▶</button>
-                        <div class="audio-waveform" id="waveform">
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-400 mt-3 text-center">This song reminds me of you ❤️</p>
-                </div>
-            </div>
-
-            <!-- Card 4: Photos -->
             <div class="card" id="card-photos">
                 <div class="card-icon">📸</div>
-                <h3 class="card-title">Our Memories</h3>
-                <p class="text-gray-300">Swipe through</p>
-                <div class="card-content">
-                    <div class="swiper" id="photo-swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%234a90e2' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='24' fill='white' text-anchor='middle'%3EMemory 1%3C/text%3E%3C/svg%3E" alt="Photo 1">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e74c3c' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='24' fill='white' text-anchor='middle'%3EMemory 2%3C/text%3E%3C/svg%3E" alt="Photo 2">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%2350c878' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='24' fill='white' text-anchor='middle'%3EMemory 3%3C/text%3E%3C/svg%3E" alt="Photo 3">
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                </div>
+                <h3 class="card-title">Memories</h3>
+                <p class="text-gray-300">Tap to view</p>
             </div>
+
         </div>
+
+        <button id="restart-btn" class="continue-btn mt-12">
+            ↺ Go Back to Start
+        </button>
     </section>
 
     <audio id="happyBirthdayAudio" src="audio/happy_birthday.mp3" preload="auto"></audio>
